@@ -11,7 +11,7 @@ public class Camera {
     private PositionMatrix positionMatrix;
     private ProjectionMatrix projectionMatrix;
 
-
+    
     public Camera() {
         reset();
     }
@@ -71,14 +71,29 @@ public class Camera {
             walls.addAll(cuboid.copy().transform(positionMatrix).getWalls());
         }
 
-        walls.sort(Wall::compareTo);
-
-        for (int i = 0; i < 12; i++) {
-            walls.get(i).print();
+        for (int i = 0; i < 24; i++) {
+            for (int j = 0; j < i; j++) {
+                System.out.print(" ");
+            }
+            for (int j = i; j < 24; j++) {
+                switch (walls.get(i).compareTo(walls.get(j))) {
+                    case 1:
+                        System.out.print("+");
+                        break;
+                    case 0:
+                        System.out.print("?");
+                        break;
+                    case -1:
+                        System.out.print("-");
+                        break;
+                    default:
+                        throw new RuntimeException("Invalid result");
+                }
+            }
+            System.out.println();
         }
-        System.out.println();
-        System.out.println("------------------------------------------------");
 
+        walls.sort(Wall::compareTo);
 
         for (Wall wall : walls) {
             wall.transform(projectionMatrix).draw(gc);
