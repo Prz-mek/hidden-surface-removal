@@ -12,8 +12,7 @@ public class Polygon implements Comparable<Polygon> {
         this.vertices = new Point[] { a, b, c, d };
     }
 
-    @Override
-    public int compareTo(Polygon p) {
+    public int behind(Polygon p) {
         RealMatrix plane = new Array2DRowRealMatrix(new double[][] {
                 { -p.vertices[0].getX(), -p.vertices[0].getY(), -p.vertices[0].getZ() },
                 { -p.vertices[1].getX(), -p.vertices[1].getY(), -p.vertices[1].getZ() },
@@ -39,6 +38,12 @@ public class Polygon implements Comparable<Polygon> {
         }
 
         return prevDet * detCamera < 0 ? -1 : 1;
+    }
+
+    @Override
+    public int compareTo(Polygon p) {
+        int result = behind(p);
+        return result != 0 ? result : -p.behind(this);
     }
 
     public double[] getX() {
