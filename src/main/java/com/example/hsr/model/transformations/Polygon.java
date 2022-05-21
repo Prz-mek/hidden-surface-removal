@@ -6,7 +6,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 public class Polygon implements Comparable<Polygon> {
 
-    private Point[] vertices;
+    public Point[] vertices;
 
     public Polygon(Point a, Point b, Point c, Point d) {
         this.vertices = new Point[] { a, b, c, d };

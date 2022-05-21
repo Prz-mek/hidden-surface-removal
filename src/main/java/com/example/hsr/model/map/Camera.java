@@ -1,6 +1,7 @@
 package com.example.hsr.model.map;
 
 import com.example.hsr.model.transformations.ProjectionMatrix;
+import com.example.hsr.model.transformations.Point;
 import com.example.hsr.model.transformations.PositionMatrix;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -78,20 +79,21 @@ public class Camera {
 
             @Override
             public int compare(List<Wall> arg0, List<Wall> arg1) {
-                int count = 0;
-                for (Wall wall0 : arg0) {
-                    boolean alwaysBehind = true;
-                    for (Wall wall1 : arg1) {
-                        if (wall1.compareTo(wall0) == 1) {
-                            alwaysBehind = false;
-                            break;
-                        }
-                    }
-                    if (alwaysBehind) {
-                        count++;
+                double avgZ0 = 0;
+                for (Wall wall : arg0) {
+                    for (Point point : wall.polygon.vertices) {
+                        avgZ0 += point.getZ();
                     }
                 }
-                return count > 1 ? 1 : -1;
+                avgZ0 /= 24;
+                double avgZ1 = 0;
+                for (Wall wall : arg1) {
+                    for (Point point : wall.polygon.vertices) {
+                        avgZ1 += point.getZ();
+                    }
+                }
+                avgZ1 /= 24;
+                return avgZ0 - avgZ1 < 0 ? 1 : -1;
             }
 
         });

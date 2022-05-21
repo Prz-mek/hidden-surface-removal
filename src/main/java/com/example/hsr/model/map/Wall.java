@@ -9,7 +9,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 
 public class Wall implements Comparable<Wall> {
 
-    private Polygon polygon;
+    public Polygon polygon;
     private Color color;
 
     public Wall(Point a, Point b, Point c, Point d, Color color) {
