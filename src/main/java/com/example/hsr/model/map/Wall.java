@@ -30,25 +30,27 @@ public class Wall implements Comparable<Wall> {
     public void draw(GraphicsContext gc) {
         double[] x = polygon.getX();
         double[] y = polygon.getY();
-        for  (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             x[i] = x[i] + View.WIDTH / 2;
             y[i] = y[i] + View.HEIGHT / 2;
         }
         gc.setFill(color);
         gc.fillPolygon(x, y, 4);
-        gc.strokeLine(x[0] ,  y[0], x[1] , y[1] );
-        gc.strokeLine(x[1] ,  y[1], x[2] , y[2] );
-        gc.strokeLine(x[2] ,  y[2] , x[3], y[3] );
-        gc.strokeLine(x[3] ,  y[3], x[0], y[0]);
+        gc.strokeLine(x[0], y[0], x[1], y[1]);
+        gc.strokeLine(x[1], y[1], x[2], y[2]);
+        gc.strokeLine(x[2], y[2], x[3], y[3]);
+        gc.strokeLine(x[3], y[3], x[0], y[0]);
     }
 
-    public void print() {
+    @Override
+    public String toString() {
         double[] x = polygon.getX();
         double[] y = polygon.getY();
         double[] z = polygon.getZ();
+        String result = "";
         for (int i = 0; i < 4; i++) {
-            System.out.println(x[i] + " " + y[i] + " " + z[i]);
+            result += x[i] + " " + y[i] + " " + z[i] + "\n";
         }
-        System.out.println();
+        return result + "\n";
     }
 }
