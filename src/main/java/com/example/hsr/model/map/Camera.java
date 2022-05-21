@@ -66,40 +66,60 @@ public class Camera {
         }
     }
 
+    private class IndexedWalls {
+        public List<Wall> walls;
+        public int index;
+    }
+
     public void draw(GraphicsContext gc) {
-        List<List<Wall>> walls = new ArrayList<>();
+        List<IndexedWalls> walls = new ArrayList<>();
+        int index = 0;
         for (Cuboid cuboid : Scene.DEFAULT_VIEW) {
             ArrayList<Wall> nextList = new ArrayList<>();
             nextList.addAll(cuboid.copy().transform(positionMatrix).getWalls());
-            nextList.sort(Wall::compareTo);
-            walls.add(nextList);
+            IndexedWalls iwalls = new IndexedWalls();
+            iwalls.walls = nextList;
+            iwalls.index = index++;
+            walls.add(iwalls);
         }
 
-        walls.sort(new Comparator<List<Wall>>() {
+        walls.sort(new Comparator<IndexedWalls>() {
 
             @Override
-            public int compare(List<Wall> arg0, List<Wall> arg1) {
-                double avgZ0 = 0;
-                for (Wall wall : arg0) {
-                    for (Point point : wall.polygon.vertices) {
-                        avgZ0 += point.getZ();
+            public int compare(IndexedWalls arg0, IndexedWalls arg1) {
+                List<Wall> walls = new ArrayList<>();
+                if (arg0.index + arg1.index == 1 || arg0.index + arg1.index == 5) {
+                    walls.add(arg0.walls.get(1));
+                    walls.add(arg0.walls.get(3));
+                    walls.add(arg1.walls.get(1));
+                    walls.add(arg1.walls.get(3));
+                } else {
+                    walls.add(arg0.walls.get(0));
+                    walls.add(arg0.walls.get(2));
+                    walls.add(arg1.walls.get(0));
+                    walls.add(arg1.walls.get(2));
+                }
+                for (int i = 0; i < 2; i++) {
+                    Wall wall = walls.get(i);
+                    boolean inFront = true;
+                    for (int j = 2; j < 4; j++) {
+                        if (walls.get(j).compareTo(wall) > 0) {
+                            inFront = false;
+                            break;
+                        }
+                    }
+                    if (inFront) {
+                        return 1;
                     }
                 }
-                avgZ0 /= 24;
-                double avgZ1 = 0;
-                for (Wall wall : arg1) {
-                    for (Point point : wall.polygon.vertices) {
-                        avgZ1 += point.getZ();
-                    }
-                }
-                avgZ1 /= 24;
-                return avgZ0 - avgZ1 < 0 ? 1 : -1;
+                return -1;
             }
 
         });
 
-        for (List<Wall> list : walls) {
-            for (Wall wall : list) {
+        for (IndexedWalls list : walls) {
+            list.walls.sort(Wall::compareTo);
+            for (Wall wall : list.walls) {
                 wall.transform(projectionMatrix).draw(gc);
             }
         }
