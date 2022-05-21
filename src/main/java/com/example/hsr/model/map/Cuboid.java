@@ -32,6 +32,16 @@ public class Cuboid implements Solid {
     private final int D_PRIME = 7;
 
     private final Point[] vertices;
+    
+    /**
+     * Wall indexes:
+     * 0: front
+     * 1: right
+     * 2: back
+     * 3: left
+     * 4: bottom
+     * 5: top
+     */
     private final Wall[] walls;
 
     private Color color;
